@@ -1,0 +1,33 @@
+CREATE OR ALTER FILE FORMAT  load_format 
+    TYPE = CSV
+    SKIP_HEADER = 1
+    FIELD_DELIMITER = ','
+    TRIM_SPACE = TRUE
+    RECORD_DELIMITER = '\n'
+    FIELD_OPTIONALLY_ENCLOSED_BY = '"'
+    NULL_IF = ('NULL', 'N/A', '');
+
+
+COPY INTO CRM_CUST_INFO
+FROM @stage_crm/cust_info.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
+
+COPY INTO CRM_PRD_INFO
+FROM @stage_crm/prd_info.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
+
+COPY INTO CRM_SALES_DETAILS 
+FROM @stage_crm/sales_details.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
+
+COPY INTO ERP_CUST_AZ12 
+FROM @stage_erp/CUST_AZ12.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
+
+COPY INTO ERP_LOC_A101
+FROM @stage_erp/LOC_A101.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
+
+COPY INTO ERP_PX_CAT_G1V2
+FROM @stage_erp/PX_CAT_G1V2.csv
+FILE_FORMAT = (FORMAT_NAME = 'load_format');
