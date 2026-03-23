@@ -1,0 +1,77 @@
+CREATE TABLE IF NOT EXISTS CRM_CUST_INFO 
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_crm/cust_info.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+CREATE TABLE IF NOT EXISTS CRM_CUST_INFO 
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_crm/cust_info.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+CREATE TABLE IF NOT EXISTS CRM_PRD_INFO 
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_crm/prd_info.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+
+CREATE TABLE IF NOT EXISTS CRM_SALES_DETAILS 
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_crm/sales_details.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+CREATE TABLE IF NOT EXISTS ERP_CUST_AZ12 
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_erp/CUST_AZ12.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+CREATE TABLE IF NOT EXISTS ERP_LOC_A101
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_erp/LOC_A101.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
+
+CREATE TABLE IF NOT EXISTS ERP_PX_CAT_G1V2
+USING TEMPLATE (
+    SELECT ARRAY_AGG(OBJECT_CONSTRUCT(*))
+    FROM TABLE (
+            INFER_SCHEMA(
+                LOCATION => '@stage_erp/PX_CAT_G1V2.csv',
+                FILE_FORMAT =>'my_csv_format' 
+            )
+    )
+);
