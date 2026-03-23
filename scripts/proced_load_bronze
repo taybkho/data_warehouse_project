@@ -1,0 +1,53 @@
+CREATE OR REPLACE PROCEDURE load_bronze_layer()
+RETURNS STRING
+LANGUAGE PYTHON
+RUNTIME_VERSION = '3.9'
+PACKAGES = ('snowflake-snowpark-python')
+HANDLER = 'run'
+AS
+$$
+import datetime 
+def run(session):
+    tables = [
+        ('CRM_CUST_INFO',     '@stage_crm/cust_info.csv'),
+        ('CRM_PRD_INFO',      '@stage_crm/prd_info.csv'),
+        ('CRM_SALES_DETAILS', '@stage_crm/sales_details.csv'),
+        ('ERP_CUST_AZ12',     '@stage_erp/CUST_AZ12.csv'),
+        ('ERP_LOC_A101',      '@stage_erp/LOC_A101.csv'),
+        ('ERP_PX_CAT_G1V2',   '@stage_erp/PX_CAT_G1V2.csv'),
+    ]
+    batch_start_time = datetime.datetime.now()
+    
+    success_count = 0
+    failure_count = 0
+    results = []
+    
+    print(start_time)
+    for table in tables:
+        try:
+            session.sql(f"COPY INTO {table[0]} FROM {table[1]} FILE_FORMAT = (FORMAT_NAME = 'load_format')").collect()
+            success_count += 1
+            results.append(f"{table[0]}: SUCCESS")
+        except Exception as e:
+            failure_count += 1
+            results.append(f"{table[0]}: FAILED — {str(e)}")
+
+    summary = '\n'.join(results)
+    batch_end_time = datetime.datetime.now()
+    duration = batch_end_time - batch_start_time 
+    return f"{summary}\n\nTotal: {success_count} succeeded, {failure_count} failed \n the process took {duration}"
+   
+            
+$$;
+
+CALL load_bronze_layer();
+
+-- CRM_CUST_INFO: SUCCESS
+-- CRM_PRD_INFO: SUCCESS
+-- CRM_SALES_DETAILS: SUCCESS
+-- ERP_CUST_AZ12: SUCCESS
+-- ERP_LOC_A101: SUCCESS
+-- ERP_PX_CAT_G1V2: SUCCESS
+
+-- Total: 6 succeeded, 0 failed 
+--  the process took 0:00:04.264876
